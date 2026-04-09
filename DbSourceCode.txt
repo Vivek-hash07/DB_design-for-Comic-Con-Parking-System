@@ -1,0 +1,48 @@
+vehicle [icon:car] {
+  id serial primary key,
+  vehicle_no text not null,
+  entered_at timestamp not null,
+  exists_at timestamp not null,
+}
+
+typeof_vehicle [icon: car] {
+  id serial primary key,
+  vehicle_no text not null Foreign key, 
+  type_of enum not null,
+}
+
+typeof_vehicle.vehicle_no - vehicle.id
+
+
+payment [icon: money] {
+  id serial primary key,
+  payment_mode enum not null,
+  typeof_vehicle enum not null Foreign key, 
+  transaction_time timestamp not null,
+  vehicle_no text not null Foreign key,
+  session timestamp not null,
+}
+
+payment.typeof_vehicle - typeof_vehicle.id
+ 
+
+session [icon: fitbit] {
+  id serial primary key,
+  vehicle_no text not null Foreign key,
+  starts_at timestamp not null,
+  ends_at timestamp not null,
+}
+session.vehicle_no < vehicle.id
+
+
+reserved_for [icon: user] {
+  id serial primary key,
+  vehicle_no text not null,
+  session_id number not null Foreign key,
+  type_of enum not null Foreign key,
+}
+
+reserved_for.vehicle_no - vehicle.id
+reserved_for.session_id > session.id
+reserved_for.type_of - typeof_vehicle.id 
+reserved_for.vehicle_no - vehicle.id
